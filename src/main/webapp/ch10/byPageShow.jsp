@@ -1,119 +1,77 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<HEAD>
+<jsp:useBean id="dataBean" class="com.design.project_design.Record_Bean" scope="session"/>
+<!DOCTYPE html>
+<html>
+<head>
     <%@ include file="head.txt" %>
-</HEAD>
-<title>分页浏览页面</title>
-<style>
-    #tom {
-        font-family: 宋体, serif;
-        font-size: 26px;
-        color: black
-    }
-</style>
-<jsp:useBean id="dataBean" class="com.design.project_design.Record_Bean"
-             scope="session"/>
-<HTML>
-<body background=image/back.jpg>
-<center>
+    <title>商品列表</title>
+</head>
+<body>
+<div class="container">
     <jsp:setProperty name="dataBean" property="pageSize" param="pageSize"/>
     <jsp:setProperty name="dataBean" property="currentPage" param="currentPage"/>
-    <p>
-    <table id=tom border=1>
+
+    <div class="card">
+        <h2 class="card-title">📱 商品展示</h2>
+
         <% String[][] table = dataBean.getTableRecord();
-            if (table == null) {
-                out.print("没有记录");
-                return;
-            }
+            if (table == null || table.length == 0) {
+                out.print("<div style='text-align:center; padding:30px; color:#999;'>暂无数据，请先选择分类或搜索</div>");
+            } else {
         %>
-        <tr>
-            <
-            <th>手机标识号</th>
-            <
-            <th>手机名称</th>
-            <
-            <th>手机制造商</th>
-            <
-            <th>手机价格</th>
-            <
-            <th>查看细节</th>
-            <
-            <th>添加到购物车</th>
-        </tr>
-        <% int totalRecord = table.length;
-            int pageSize = dataBean.getPageSize(); //每页显示的记录数
-            int totalPages = dataBean.getTotalPages(); //总页数
-            if (totalRecord % pageSize == 0)
-                totalPages = totalRecord / pageSize;
-            else
-                totalPages = totalRecord / pageSize + 1;
-            dataBean.setPageSize(pageSize);
-            dataBean.setTotalPages(totalPages);
-            if (totalPages >= 1) {
-                if (dataBean.getCurrentPage() < 1)
-                    dataBean.setCurrentPage(dataBean.getTotalPages());
-                if (dataBean.getCurrentPage() > dataBean.getTotalPages())
-                    dataBean.setCurrentPage(1);
-            }
-            int index = (dataBean.getCurrentPage() - 1) * pageSize; //table的currentPage页起始位置
-            int start = index;
-            for (int i = index; i < pageSize + index; i++) {
-                if (i >= totalRecord)
-                    break;
-                out.print("<tr>");
-                for (int j = 0; j < table[0].length; j++) {
-                    out.print("<td>" + table[i][j] + "</td>");
+
+        <div class="goods-grid">
+            <%
+                int totalRecord = table.length;
+                int pageSize = dataBean.getPageSize();
+                int totalPages = dataBean.getTotalPages();
+                if (totalRecord % pageSize == 0) totalPages = totalRecord / pageSize;
+                else totalPages = totalRecord / pageSize + 1;
+
+                dataBean.setPageSize(pageSize);
+                dataBean.setTotalPages(totalPages);
+
+                if (totalPages >= 1) {
+                    if (dataBean.getCurrentPage() < 1) dataBean.setCurrentPage(dataBean.getTotalPages());
+                    if (dataBean.getCurrentPage() > dataBean.getTotalPages()) dataBean.setCurrentPage(1);
                 }
-                String detail =
-                        "<a href='showDetail.jsp?mobileID=" + table[i][0] + "'>手机详情</a>";
-                out.print("<td>" + detail + "</td>");
-                String shopping =
-                        "<a href='putGoodsServlet?mobileID=" + table[i][0] + "'>添加到购物车</a>";
-                out.print("<td>" + shopping + "</td>");
-                out.print("</tr>");
-            }
-        %>
-    </table>
-    <p id=tom>全部记录数:
-        <jsp:getProperty name="dataBean" property="totalRecords"/>
-        <br>每页最多显示
-        <jsp:getProperty name="dataBean" property="pageSize"/>
-        条记录
-        <br>当前显示第
-        <jsp:getProperty name="dataBean" property="currentPage"/>
-        页(共有
-        <jsp:getProperty name="dataBean" property="totalPages"/>
-        页)。</p>
-    <table id=tom>
-        <tr>
-            <td>
-                <form action="" method=post>
-                    <input type=hidden name="currentPage"
-                           value="<%= dataBean.getCurrentPage()-1 %>"/>
-                    <input type=submit id=tom value="上一页"></form>
-            </td>
-            <td>
-                <form action="" method=post>
-                    <input type=hidden name="currentPage"
-                           value="<%= dataBean.getCurrentPage()+1 %>"/>
-                    <input type=submit id=tom value="下一页"></form>
-            </td>
-            <td>
-                <form action="" id=tom method=post>
-                    输入页码:<input type=text id=tom name="currentPage" size=2>
-                    <input type=submit id=tom value="提交"></form>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>
-                <form action="" id=tom method=post>
-                    每页显示<input type=text id=tom
-                                   name="pageSize" value="<%= dataBean.getPageSize() %>" size=1>
-                    条记录<input type=submit id=tom value="确定"></form>
-            </td>
-        </tr>
-    </table>
-</center>
+
+                int index = (dataBean.getCurrentPage() - 1) * pageSize;
+
+                for (int i = index; i < pageSize + index; i++) {
+                    if (i >= totalRecord) break;
+                    String id = table[i][0];
+                    String name = table[i][1];
+                    String made = table[i][2];
+                    String price = table[i][3];
+                    String pic = "default.png";
+                    // 防止旧代码只查了4列导致数组越界
+                    if(table[i].length > 4 && table[i][4] != null) pic = table[i][4];
+            %>
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="image/<%=pic%>" onerror="this.src='image/default.png'" alt="<%=name%>">
+                </div>
+                <div class="product-body">
+                    <div class="product-title" title="<%=name%>"><%=name%></div>
+                    <div class="product-meta">制造商：<%=made%></div>
+                    <div class="product-price">¥ <%=price%></div>
+                    <div class="product-actions">
+                        <a href="showDetail.jsp?mobileID=<%=id%>" class="btn btn-outline" style="flex:1; font-size:12px;">详情</a>
+                        <a href="putGoodsServlet?mobileID=<%=id%>" class="btn btn-primary" style="flex:1; font-size:12px;">加购</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <form action="" method="post"><input type="hidden" name="currentPage" value="<%= dataBean.getCurrentPage()-1 %>"><input type="submit" value="上一页" class="btn btn-outline" <%=dataBean.getCurrentPage()<=1?"disabled":""%>></form>
+            <span>第 <%=dataBean.getCurrentPage()%> / <%=totalPages%> 页</span>
+            <form action="" method="post"><input type="hidden" name="currentPage" value="<%= dataBean.getCurrentPage()+1 %>"><input type="submit" value="下一页" class="btn btn-outline" <%=dataBean.getCurrentPage()>=totalPages?"disabled":""%>></form>
+        </div>
+        <% } %>
+    </div>
+</div>
 </body>
-</HTML>
+</html>

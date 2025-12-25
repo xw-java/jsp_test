@@ -1,0 +1,191 @@
+/* src/main/webapp/css/style.css */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --light-bg: #f8f9fa;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 导航栏 */
+.navbar {
+    background: #fff;
+    padding: 0 50px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.brand {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+.nav-links a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+.user-info {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 布局容器 */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    min-height: 60vh;
+}
+
+/* 卡片样式 */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+.card-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+.error-msg {
+    color: var(--danger-color);
+    font-size: 12px;
+    margin-top: 5px;
+    display: none; /* 默认隐藏 */
+}
+
+/* 按钮样式 */
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+    text-align: center;
+}
+.btn-primary { background: var(--primary-color); color: #fff; }
+.btn-primary:hover { background: #0056b3; }
+.btn-danger { background: var(--danger-color); color: #fff; }
+.btn-danger:hover { background: #bd2130; }
+.btn-success { background: var(--success-color); color: #fff; }
+.btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); }
+.btn-outline:hover { background: var(--primary-color); color: #fff; }
+.btn-block { display: block; width: 100%; }
+
+/* 表格样式 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.table th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    color: #495057;
+    font-weight: 600;
+}
+.table td {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+.table tr:last-child td { border-bottom: none; }
+
+/* 提示框 */
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.alert-info { background: #e2e3e5; color: #383d41; }
+.alert-warning { background: #fff3cd; color: #856404; }
+
+/* 手机列表网格 */
+.goods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+.product-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.product-img {
+    height: 200px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.product-img img { max-height: 80%; max-width: 80%; object-fit: contain; }
+.product-body { padding: 20px; }
+.product-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.product-meta { font-size: 13px; color: #888; margin-bottom: 15px; }
+.product-price { color: #f50; font-size: 20px; font-weight: bold; }
+.product-actions { margin-top: 15px; display: flex; gap: 10px; }

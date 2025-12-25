@@ -1,11 +1,11 @@
 package com.design.project_design;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -28,30 +28,46 @@ public class SearchByCondition extends HttpServlet {
         HttpSession session = request.getSession(true);
         String searchMess = request.getParameter("searchMess");
         String radioMess = request.getParameter("radio");
+
         if (searchMess == null || searchMess.isEmpty()) {
-            response.getWriter().print("没有查询信息,无法查询");
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().print("<script>alert('请输入查询信息');window.location='searchMobile.jsp';</script>");
             return;
         }
+
+        if (radioMess == null) {
+            radioMess = "mobile_name"; // 默认按名称搜
+        }
+
         Connection con = null;
         String queryCondition = "";
         float max = 0, min = 0;
+
+        // 【修复点】：所有的 SQL 语句都增加了 mobile_pic 字段，确保能查出图片
         if (radioMess.contains("mobile_version")) {
             queryCondition =
-                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price " +
+                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price,mobile_pic " +
                             "FROM mobileForm where mobile_version = '" + searchMess + "'";
         } else if (radioMess.contains("mobile_name")) {
             queryCondition =
-                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price " +
+                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price,mobile_pic " +
                             "FROM mobileForm where mobile_name like '%" + searchMess + "%'";
         } else if (radioMess.contains("mobile_price")) {
-            String[] priceMess = searchMess.split("[- ]+");
-            min = Float.parseFloat(priceMess[0]);
-            max = Float.parseFloat(priceMess[1]);
-            queryCondition =
-                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price " +
-                            "FROM mobileForm where mobile_price <=" + max +
-                            " and mobile_price >= " + min;
+            try {
+                String[] priceMess = searchMess.split("[- ]+");
+                min = Float.parseFloat(priceMess[0]);
+                max = Float.parseFloat(priceMess[1]);
+                queryCondition =
+                        "SELECT mobile_version,mobile_name,mobile_made,mobile_price,mobile_pic " +
+                                "FROM mobileForm where mobile_price <=" + max +
+                                " and mobile_price >= " + min;
+            } catch(Exception e) {
+                response.setContentType("text/html;charset=utf-8");
+                response.getWriter().print("<script>alert('价格格式错误，请输入如 1000-2000');window.location='searchMobile.jsp';</script>");
+                return;
+            }
         }
+
         Record_Bean dataBean = null;
         try {
             dataBean = (Record_Bean) session.getAttribute("dataBean");
@@ -61,19 +77,23 @@ public class SearchByCondition extends HttpServlet {
             }
         } catch (Exception exp) {
         }
+
         try {
             Context context = new InitialContext();
             Context contextNeeded = (Context) context.lookup("java:comp/env");
             DataSource ds = (DataSource) contextNeeded.lookup("mobileConn"); //获得连接池
             con = ds.getConnection(); //使用连接池中的连接
-            Statement sql = con.createStatement();
+            Statement sql = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
             ResultSet rs = sql.executeQuery(queryCondition);
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount(); //得到结果集的列数
+
             rs.last();
             int rows = rs.getRow(); //得到记录数
             String[][] tableRecord = dataBean.getTableRecord();
             tableRecord = new String[rows][columnCount];
+
             rs.beforeFirst();
             int i = 0;
             while (rs.next()) {
@@ -88,7 +108,7 @@ public class SearchByCondition extends HttpServlet {
             response.getWriter().print("" + e);
         } finally {
             try {
-                con.close();
+                if(con != null) con.close();
             } catch (Exception ee) {
             }
         }

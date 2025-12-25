@@ -1,14 +1,16 @@
 package com.design.project_design;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+// 注意：不要改 java.sql.* 或 javax.naming.*，只改 servlet 相关的
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
@@ -47,8 +49,9 @@ public class QueryAllRecord extends HttpServlet {
             con = ds.getConnection(); //使用连接池中的连接
             Statement sql = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
+            // 修改了这里：增加了 mobile_pic 字段的查询
             String query =
-                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price " +
+                    "SELECT mobile_version,mobile_name,mobile_made,mobile_price,mobile_pic " +
                             "FROM mobileForm where id = " + id;
             ResultSet rs = sql.executeQuery(query);
             ResultSetMetaData metaData = rs.getMetaData();

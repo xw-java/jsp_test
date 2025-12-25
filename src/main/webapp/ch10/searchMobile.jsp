@@ -1,33 +1,48 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<HEAD>
+<!DOCTYPE html>
+<html>
+<head>
     <%@ include file="head.txt" %>
-</HEAD>
-<title>查询页面</title>
-<style>
-    #tom {
-        font-family: 宋体, serif;
-        font-size: 26px;
-        color: black;
-    }
-</style>
-<HTML>
-<body bgcolor=pink id=tom>
-<div align="center">
-    <p id=tom>查询时可以输入手机的版本号或手机名称及价格.<br>
-        手机名称支持模糊查询
-        <br>输入价格是在两个值之间的价格,格式是:价格1-价格2<br>
-        例如:897.98-10000
-    </p>
-    <form action="searchByConditionServlet" id=tom method="post">
-        <br>输入查询信息:<input type=text id=tom name="searchMess"><br>
-        <input type=radio name="radio" id=tom value="mobile_version"/>
-        手机版本号
-        <input type=radio name="radio" id=tom value="mobile_name">
-        手机名称
-        <input type=radio name="radio" value="mobile_price">
-        手机价格
-        <br><input type=submit id=tom value="提交">
-    </form>
+    <title>商品搜索</title>
+</head>
+<body>
+<div class="container">
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <h2 class="card-title">🔍 商品高级搜索</h2>
+
+        <form action="searchByConditionServlet" method="post">
+            <div class="form-group">
+                <label class="form-label">请输入关键词（名称、版本号或价格范围）</label>
+                <input type="text" class="form-control" name="searchMess" placeholder="例如：iPhone 或 3000-5000">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">搜索类型</label>
+                <div style="display: flex; gap: 20px; padding: 10px 0;">
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="radio" value="mobile_name" checked>
+                        按手机名称 (模糊查询)
+                    </label>
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="radio" value="mobile_version">
+                        按版本号
+                    </label>
+                    <label style="cursor: pointer;">
+                        <input type="radio" name="radio" value="mobile_price">
+                        按价格范围 (格式: min-max)
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">开始搜索</button>
+        </form>
+
+        <div class="alert alert-info" style="margin-top: 30px;">
+            <strong>💡 提示：</strong><br>
+            1. 价格搜索格式为：最低价-最高价（如：1000-3000）<br>
+            2. 名称搜索支持模糊匹配，输入"小米"可搜到所有小米手机
+        </div>
+    </div>
 </div>
 </body>
-</HTML>
+</html>
