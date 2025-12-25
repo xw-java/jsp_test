@@ -1,0 +1,102 @@
+package com.design.project_design;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PutGoodsToCar extends HttpServlet {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+    }
+
+    public void service(HttpServletRequest request,
+                        HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
+        Connection con = null;
+        PreparedStatement pre = null; //预处理语句
+        ResultSet rs;
+        String mobileID = request.getParameter("mobileID");
+        Login loginBean = null;
+        HttpSession session = request.getSession(true);
+        try {
+            loginBean = (Login) session.getAttribute("loginBean");
+            if (loginBean == null) {
+                response.sendRedirect("login.jsp"); //重定向到登录页面
+                return;
+            } else {
+                boolean b = loginBean.getLogname() == null ||
+                        loginBean.getLogname().isEmpty();
+                if (b) {
+                    response.sendRedirect("login.jsp"); //重定向到登录页面
+                    return;
+                }
+            }
+        } catch (Exception exp) {
+            response.sendRedirect("login.jsp"); //重定向到登录页面
+            return;
+        }
+        try {
+            Context context = new InitialContext();
+            Context contextNeeded = (Context) context.lookup("java:comp/env");
+            DataSource ds =
+                    (DataSource) contextNeeded.lookup("mobileConn"); //获得连接池
+            con = ds.getConnection(); //使用连接池中的连接
+            String queryMobileForm =
+                    "select * from mobileForm where mobile_version = ?"; //查询商品表
+            String queryShoppingForm =
+                    "select goodsAmount from shoppingForm where goodsId = ?"; //购物车表
+            String updateSQL =
+                    "update shoppingForm set goodsAmount = ? where goodsId = ?"; //更新
+            String insertSQL =
+                    "insert into shoppingForm values(?,?,?,?,?)"; //添加到购物车
+            pre = con.prepareStatement(queryShoppingForm);
+            pre.setString(1, mobileID);
+            rs = pre.executeQuery();
+            if (rs.next()) { //该货物已经在购物车中
+                int amount = rs.getInt(1);
+                amount++;
+                pre = con.prepareStatement(updateSQL);
+                pre.setInt(1, amount);
+                pre.setString(2, mobileID);
+                pre.executeUpdate(); //更新购物车中该货物的数量
+            } else { //向购物车添加商品
+                pre = con.prepareStatement(queryMobileForm);
+                pre.setString(1, mobileID);
+                rs = pre.executeQuery();
+                if (rs.next()) {
+                    pre = con.prepareStatement(insertSQL);
+                    pre.setString(1, rs.getString("mobile_version"));
+                    pre.setString(2, loginBean.getLogname());
+                    pre.setString(3, rs.getString("mobile_name"));
+                    pre.setFloat(4, rs.getFloat("mobile_price"));
+                    pre.setInt(5, 1); //向购物车中添加该货物
+                    pre.executeUpdate();
+                }
+            }
+            con.close();
+            response.sendRedirect("lookShoppingCar.jsp"); //查看购物车
+        } catch (SQLException exp) {
+            response.getWriter().print("" + exp);
+        } catch (NamingException exp) {
+        } finally {
+            try {
+                con.close();
+            } catch (Exception ee) {
+            }
+        }
+    }
+}
