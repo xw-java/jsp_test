@@ -3,25 +3,25 @@
 
 <div class="navbar">
     <a href="index.jsp" class="brand">
-        <span style="font-size: 30px; margin-right: 10px;">🐝</span> 小蜜蜂手机网
+        <span style="font-size: 28px;">🐝</span> 小蜜蜂手机网
     </a>
     <div class="nav-links">
         <a href="index.jsp">首页</a>
         <a href="lookMobile.jsp">分类浏览</a>
         <a href="searchMobile.jsp">搜索</a>
         <a href="lookShoppingCar.jsp">🛒 购物车</a>
-        <a href="lookOrderForm.jsp">📦 我的订单</a>
+        <a href="lookOrderForm.jsp">📦 订单</a>
     </div>
     <div class="user-info">
         <%
             com.design.project_design.Login headLoginBean = (com.design.project_design.Login)session.getAttribute("loginBean");
             if(headLoginBean == null || headLoginBean.getLogname() == null || headLoginBean.getLogname().isEmpty()){
         %>
-            <a href="login.jsp" class="btn btn-outline" style="padding: 5px 15px;">登录</a>
-            <a href="inputRegisterMess.jsp" class="btn btn-primary" style="padding: 5px 15px;">注册</a>
+            <a href="login.jsp" class="btn btn-outline" style="padding: 6px 20px; border-radius: 20px; font-size: 14px;">登录</a>
+            <a href="inputRegisterMess.jsp" class="btn btn-primary" style="padding: 6px 20px; border-radius: 20px; font-size: 14px; margin-left: 10px;">注册</a>
         <% } else { %>
-            <span>你好, <b><%=headLoginBean.getLogname()%></b></span>
-            <a href="exitServlet" style="margin-left: 10px; color: var(--danger-color); font-size: 14px;">退出</a>
+            <span style="color: #555; margin-right: 10px;">Hi, <b><%=headLoginBean.getLogname()%></b></span>
+            <a href="exitServlet" style="color: var(--secondary-color); font-size: 14px; font-weight: bold; text-decoration: none;">退出</a>
         <% } %>
     </div>
 </div>

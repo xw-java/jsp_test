@@ -4,59 +4,39 @@
 <head>
     <%@ include file="head.txt" %>
     <title>小蜜蜂手机 - 首页</title>
-    <style>
-        .hero-section {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            color: white;
-            padding: 80px 0;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 40px;
-        }
-        .hero-title { font-size: 48px; margin-bottom: 20px; font-weight: bold; }
-        .hero-subtitle { font-size: 20px; margin-bottom: 40px; opacity: 0.9; }
-        .feature-box {
-            display: flex;
-            justify-content: space-around;
-            padding: 40px 0;
-        }
-        .feature-item {
-            text-align: center;
-            padding: 20px;
-        }
-        .feature-icon { font-size: 40px; margin-bottom: 15px; color: var(--primary-color); }
-    </style>
 </head>
 <body>
 
-<div class="hero-section">
-    <div class="container">
-        <h1 class="hero-title">发现科技之美</h1>
-        <p class="hero-subtitle">正品保障 · 极速发货 · 售后无忧</p>
-        <a href="lookMobile.jsp" class="btn btn-light" style="background: white; color: #007bff; padding: 15px 40px; font-size: 18px; border-radius: 30px;">立即选购</a>
-    </div>
-</div>
-
 <div class="container">
-    <div class="card">
-        <div class="feature-box">
-            <div class="feature-item">
-                <div class="feature-icon">🚀</div>
-                <h3>极速配送</h3>
-                <p style="color:#666">次日达，风雨无阻</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">🛡️</div>
-                <h3>官方正品</h3>
-                <p style="color:#666">假一赔十，值得信赖</p>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">💎</div>
-                <h3>优质售后</h3>
-                <p style="color:#666">7天无理由退换货</p>
-            </div>
+    <jsp:include page="banner.jsp" />
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; padding: 0 20px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:24px; color:var(--primary-color);">🚀</span>
+            <div><b>极速发货</b><div style="font-size:12px; color:#888;">24小时内发货</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:24px; color:var(--primary-color);">🛡️</span>
+            <div><b>官方正品</b><div style="font-size:12px; color:#888;">假一赔十保证</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:24px; color:var(--primary-color);">💎</span>
+            <div><b>售后无忧</b><div style="font-size:12px; color:#888;">7天无理由退换</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:24px; color:var(--primary-color);">💳</span>
+            <div><b>分期免息</b><div style="font-size:12px; color:#888;">最高24期免息</div></div>
         </div>
     </div>
+
+    <jsp:include page="hotGoods.jsp" />
+
+</div>
+
+<div class="footer">
+    <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">🐝 小蜜蜂手机商城</div>
+    <p>Copyright © 2023 Mobile Shop System. All Rights Reserved.</p>
+    <p style="font-size: 12px; opacity: 0.6;">Designed for Java JSP Course</p>
 </div>
 
 </body>

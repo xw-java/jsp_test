@@ -32,7 +32,7 @@ public class HandleLogin extends HttpServlet {
         String logname = request.getParameter("logname").trim(),
                 password = request.getParameter("password").trim();
         password = Encrypt.encrypt(password,"javajsp"); //给用户密码加密
-        boolean boo = (!logname.isEmpty())&&(!password.isEmpty());
+        boolean boo = (logname.length() > 0) && (password.length() > 0);
         try{
             Context context = new InitialContext();
             Context contextNeeded =
@@ -49,9 +49,8 @@ public class HandleLogin extends HttpServlet {
                 if(m){
                     //调用登录成功的方法
                     success(request,response,logname,password);
-                    RequestDispatcher dispatcher =
-                            request.getRequestDispatcher("login.jsp"); //转发
-                    dispatcher.forward(request, response);
+                    // 【关键修改】登录成功后，直接重定向到首页
+                    response.sendRedirect("index.jsp");
                 }
                 else{
                     String backNews = "您输入的用户名不存在,或密码不匹配";
@@ -75,7 +74,7 @@ public class HandleLogin extends HttpServlet {
         }
         finally{
             try{
-                con.close();
+                if(con!=null) con.close();
             }
             catch(Exception ee){}
         }
@@ -115,12 +114,15 @@ public class HandleLogin extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         try {
             PrintWriter out = response.getWriter();
-            out.println("<html><body>");
-            out.println("<h2>"+ logname + "登录反馈结果<br>"+ backNews +"</h2>");
-            out.println("返回登录页面或主页<br>");
-            out.println("<a href=login.jsp>登录页面</a>");
-            out.println("<br><a href=index.jsp>主页</a>");
-            out.println("</body></html>");
+            out.println("<html><head><title>登录失败</title>");
+            // 简单美化一下报错页面
+            out.println("<style>body{display:flex;justify-content:center;align-items:center;height:100vh;background:#f0f2f5;font-family:sans-serif;}.box{background:white;padding:40px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);text-align:center;}a{color:#007bff;text-decoration:none;margin:0 10px;}</style>");
+            out.println("</head><body>");
+            out.println("<div class='box'>");
+            out.println("<h2 style='color:#dc3545'>登录失败</h2>");
+            out.println("<p>"+ backNews +"</p>");
+            out.println("<div style='margin-top:20px;'><a href=login.jsp>返回登录</a> <a href=index.jsp>返回首页</a></div>");
+            out.println("</div></body></html>");
         }
         catch(IOException exp){}
     }
