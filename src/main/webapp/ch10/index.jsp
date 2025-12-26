@@ -35,7 +35,7 @@
 
 <div class="footer">
     <div style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">🐝 小蜜蜂手机商城</div>
-    <p>Copyright © 2023 Mobile Shop System. All Rights Reserved.</p>
+    <p>Copyright © 2025 Mobile Shop System. All Rights Reserved.</p>
     <p style="font-size: 12px; opacity: 0.6;">Designed for Java JSP Course</p>
 </div>
 

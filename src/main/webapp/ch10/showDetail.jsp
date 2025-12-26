@@ -91,6 +91,6 @@
         finally { try{if(con!=null)con.close();}catch(Exception e){} }
     %>
 </div>
-<div class="footer"><p>Copyright © 2023 Mobile Shop System.</p></div>
+<div class="footer"><p>Copyright © 2025 Mobile Shop System.</p></div>
 </body>
 </html>

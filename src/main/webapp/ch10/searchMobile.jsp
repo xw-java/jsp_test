@@ -55,7 +55,7 @@
 </script>
 
 <div class="footer">
-    <p>Copyright © 2023 Mobile Shop System.</p>
+    <p>Copyright © 2025 Mobile Shop System.</p>
 </div>
 </body>
 </html>
